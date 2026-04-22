@@ -279,11 +279,20 @@
     const modalPhoneLink = document.getElementById("modalPhoneLink");
     const modalEmailLink = document.getElementById("modalEmailLink");
 
+    const FIXED_BOUNDS = new maplibregl.LngLatBounds(
+      [-81.8950822048011, 37.543987364071725],
+      [-71.2521986643663, 47.05149169165952]
+    );
+
     const map = new maplibregl.Map({
       container: "map",
       style: "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json",
-      center: [-98.5795, 39.8283],
-      zoom: 3.6,
+      bounds: FIXED_BOUNDS,
+      fitBoundsOptions: {
+        padding: 24,
+        duration: 0
+      },
+      maxBounds: FIXED_BOUNDS,
       attributionControl: true
     });
 
@@ -460,17 +469,6 @@
           openModal(feature.properties || {});
         });
 
-        if (features.length) {
-          const bounds = new maplibregl.LngLatBounds();
-          for (const feature of features) {
-            bounds.extend(feature.geometry.coordinates);
-          }
-          map.fitBounds(bounds, {
-            padding: 70,
-            maxZoom: 11,
-            duration: 800
-          });
-        }
       } catch (error) {
         console.error(error);
       }
